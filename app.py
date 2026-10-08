@@ -2,11 +2,10 @@ import streamlit as st
 from google import genai
 import anthropic
 
-# Bağlantıyı şu şekilde kuracağız (yeni nesil Google yöntemi)
-def get_gemini_response(prompt, api_key):
-    client = genai.Client(api_key=api_key)
-    response = client.models.generate_content(
-        model="gemini-2.0-flash-exp", # Güncel ve ücretsiz çalışan model
-        contents=prompt,
-    )
-    return response.text
+st.title("SPORTSBIONIC LAB (SBL)")
+st.write("Sistem çalışıyor, arayüz başarıyla yüklendi!")
+
+# Bütçe giriş kutusunu ekleyelim ki ekrana bir şeyler gelsin
+bütçe = st.number_input("Bütçe Giriniz:", min_value=50, value=500)
+if st.button("Analizi Başlat"):
+    st.write(f"{bütçe} TL ile analiz motoru hazır!")
