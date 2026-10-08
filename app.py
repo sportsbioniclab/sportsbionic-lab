@@ -27,7 +27,7 @@ if st.button("🚀 ÇİFT AJANLI ANALİZİ BAŞLAT"):
     else:
         try:
            # ...try bloğunun içindeki kısım...
-           import time
+          import time
         
         try:
             genai.configure(api_key=gemini_key)
@@ -52,6 +52,18 @@ if st.button("🚀 ÇİFT AJANLI ANALİZİ BAŞLAT"):
             st.subheader("Analist (Gemini) Raporu:")
             st.write(gemini_report)
             
+            # Claude Denetimi (Burada da aynı bekleme mantığını kurabiliriz)
+            c_client = anthropic.Anthropic(api_key=claude_key)
+            c_res = c_client.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=2000,
+                messages=[{"role": "user", "content": f"Denetle: {gemini_report}"}]
+            )
+            st.subheader("🛡️ Başmüfettiş (Claude) Onaylı Rapor:")
+            st.write(c_res.content[0].text)
+            
+        except Exception as e:
+            st.error(f"Sistem Hatası: {e}")
             # Claude Denetimi (Burada da aynı bekleme mantığını kurabiliriz)
             c_client = anthropic.Anthropic(api_key=claude_key)
             c_res = c_client.messages.create(
