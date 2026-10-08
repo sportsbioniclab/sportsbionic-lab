@@ -1,10 +1,12 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai
+import anthropic
 
-st.title("Model Kontrol Paneli")
-key = st.text_input("API Key Gir:", type="password")
-if st.button("Model Listesini Göster"):
-    genai.configure(api_key=key)
-    for m in genai.list_models():
-        if 'generateContent' in m.supported_generation_methods:
-            st.write(f"Model Adı: {m.name}")
+# Bağlantıyı şu şekilde kuracağız (yeni nesil Google yöntemi)
+def get_gemini_response(prompt, api_key):
+    client = genai.Client(api_key=api_key)
+    response = client.models.generate_content(
+        model="gemini-2.0-flash-exp", # Güncel ve ücretsiz çalışan model
+        contents=prompt,
+    )
+    return response.text
