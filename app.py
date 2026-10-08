@@ -26,20 +26,15 @@ if st.button("🚀 ÇİFT AJANLI ANALİZİ BAŞLAT"):
         st.error("API Anahtarlarını girin!")
     else:
         try:
-            # 1. Google'ın çalışan modelini otomatik bul
+           # ...try bloğunun içindeki kısım...
             genai.configure(api_key=gemini_key)
-            models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
-            # Liste içinden "flash" içeren en güncel modeli seç
-            model_name = next((m for m in models if 'flash' in m), models[0])
-            st.write(f"Sistem hazır. Kullanılan Motor: {model_name}")
             
-            model = genai.GenerativeModel(model_name)
-            prompt = f"Bütçe: {budget} TL. Maçlar: {matches}. Yasaklar: Çift şart, 2-3 gol tuzağı yasak."
+            # Google'ın kendi verdiği en güncel model ismi ile sabitliyoruz
+            model = genai.GenerativeModel("models/gemini-3.8-flash") 
+            
+            prompt = f"Bütçe: {budget} TL. Maçlar: {matches}. Strateji: Çift şart yasak, 2-3 gol tuzağı yasak."
             
             res = model.generate_content(prompt)
-            gemini_report = res.text
-            st.subheader("Analist (Gemini) Raporu:")
-            st.write(gemini_report)
             
             # 2. Claude Denetimi
             c_client = anthropic.Anthropic(api_key=claude_key)
