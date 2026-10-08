@@ -4,7 +4,6 @@ import anthropic
 import time
 
 st.set_page_config(page_title="SPORTSBIONIC LAB", layout="wide")
-
 st.title("🧬 SPORTS BIONIC LAB (SBL)")
 
 with st.sidebar:
@@ -18,22 +17,16 @@ if st.button("🚀 ÇİFT AJANLI ANALİZİ BAŞLAT"):
     if not gemini_key or not claude_key:
         st.error("API Anahtarlarını girin!")
     else:
-        # Analiz Başlatma
         try:
             genai.configure(api_key=gemini_key)
+            # Modeli gemini-1.5-flash olarak zorluyoruz
             model = genai.GenerativeModel("gemini-1.5-flash")
-            prompt = f"Bütçe: {budget} TL. Maçlar: {matches}. Strateji: Çift şart yasak, 2-3 gol tuzağı yasak."
+            prompt = f"Bütçe: {budget} TL. Maçlar: {matches}. Analiz et."
             
-            gemini_report = None
-            for i in range(3):
-                try:
-                    res = model.generate_content(prompt)
-                    gemini_report = res.text
-                    break
-                except Exception:
-                    time.sleep(5)
-            
-            if gemini_report:
+            # Hata detayını yakalamak için try-except'i güncelliyoruz
+            try:
+                res = model.generate_content(prompt)
+                gemini_report = res.text
                 st.subheader("Analist (Gemini) Raporu:")
                 st.write(gemini_report)
                 
@@ -46,8 +39,9 @@ if st.button("🚀 ÇİFT AJANLI ANALİZİ BAŞLAT"):
                 )
                 st.subheader("🛡️ Başmüfettiş (Claude) Onaylı Rapor:")
                 st.write(c_res.content[0].text)
-            else:
-                st.error("Gemini rapor üretemedi.")
+                
+            except Exception as e:
+                st.error(f"GEMINI DETAYLI HATA: {e}")
         
         except Exception as e:
             st.error(f"Sistem Hatası: {e}")
